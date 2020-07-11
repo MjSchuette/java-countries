@@ -61,9 +61,40 @@ public class CountryController {
         for (Country c : myList) {
             total = total + c.getPopulation();
         }
-
+        String words = "The total population is " + total;
         System.out.println("The total population is " + total);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(words, HttpStatus.OK);
     }
+
+    //    http://localhost:2019/population/min
+    @GetMapping(value = "/population/min", produces = "application/json")
+    public ResponseEntity<?> minPopulation() {
+        List<Country> myList = new ArrayList<>();
+        countryrepos.findAll().iterator().forEachRemaining(myList::add);
+        int minIndex = 0;
+        for( int index = 0; index < myList.size(); index++) {
+            if(myList.get(index).getPopulation() < myList.get(minIndex).getPopulation()) {
+                minIndex = index;
+            }
+        }
+        return new ResponseEntity<>(myList.get(minIndex), HttpStatus.OK);
+    }
+
+
+    //    http://localhost:2019/population/max
+    @GetMapping(value = "/population/max", produces = "application/json")
+    public ResponseEntity<?> maxPopulation() {
+        List<Country> myList = new ArrayList<>();
+        countryrepos.findAll().iterator().forEachRemaining(myList::add);
+        int maxIndex = 0;
+
+        for( int index = 0; index < myList.size(); index++) {
+            if(myList.get(index).getPopulation() > myList.get(maxIndex).getPopulation()) {
+                maxIndex = index;
+            }
+        }
+        return new ResponseEntity<>(myList.get(maxIndex), HttpStatus.OK);
+    }
+
 }
